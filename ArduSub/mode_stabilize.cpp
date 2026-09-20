@@ -7,7 +7,6 @@ bool ModeStabilize::init(bool ignore_checks) {
     sub.last_pilot_heading_rad = ahrs.get_yaw_rad();
 
     return true;
-    return true;
 }
 
 void ModeStabilize::run()
@@ -30,6 +29,11 @@ void ModeStabilize::run()
     // To-Do: convert sub.get_pilot_desired_lean_angles to return angles as floats
     // TODO2: move into mode.h
     sub.get_pilot_desired_lean_angles(channel_roll->get_control_in(), channel_pitch->get_control_in(), target_roll, target_pitch, attitude_control->lean_angle_max_cd());
+
+    // override pilot pitch input when pitch lock is engaged (set by joystick buttons)
+    if (sub.pitch_lock_enable) {
+        target_pitch = sub.pitch_lock_angle_cd;
+    }
 
     // get pilot's desired yaw rate
     float yaw_input = channel_yaw->pwm_to_angle_dz_trim(channel_yaw->get_dead_zone() * sub.gain, channel_yaw->get_radio_trim());

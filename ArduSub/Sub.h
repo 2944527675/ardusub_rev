@@ -290,6 +290,10 @@ private:
     // Flag indicating if we are currently controlling Pitch and Roll instead of forward/lateral
     bool roll_pitch_flag = false;
 
+    // Pitch lock: hold a fixed pitch angle and ignore pilot pitch input (state only, set elsewhere)
+    bool pitch_lock_enable = false;
+    int32_t pitch_lock_angle_cd = 0;
+
     // 3D Location vectors
     // Current location of the Sub (altitude is relative to home)
     Location current_loc;

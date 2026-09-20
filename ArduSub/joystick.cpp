@@ -347,6 +347,22 @@ void Sub::handle_jsbutton_press(uint8_t _button, bool shift, bool held)
     case JSButton::button_function_t::k_trim_pitch_dec:
         pitchTrim = constrain_float(pitchTrim-10,-200,200);
         break;
+    case JSButton::button_function_t::k_custom_1:       // 91: QGC 4.4.x lists this ID as "custom_1"
+    case JSButton::button_function_t::k_pitch_lock_30:  // 139
+        // lock pitch at 30 degrees, ignoring pilot pitch input (used by ModeStabilize)
+        if (!held) {
+            pitch_lock_enable = true;
+            pitch_lock_angle_cd = 3000; // 30 deg in centi-degrees
+            gcs().send_text(MAV_SEVERITY_INFO, "#Pitch Lock 30 deg");
+        }
+        break;
+    case JSButton::button_function_t::k_custom_2:       // 92: QGC 4.4.x lists this ID as "custom_2"
+    case JSButton::button_function_t::k_pitch_unlock:   // 140
+        if (!held) {
+            pitch_lock_enable = false;
+            gcs().send_text(MAV_SEVERITY_INFO, "#Pitch Lock Released");
+        }
+        break;
     case JSButton::button_function_t::k_input_hold_set:
         if(!motors.armed()) {
             break;
@@ -613,12 +629,8 @@ void Sub::handle_jsbutton_press(uint8_t _button, bool shift, bool held)
         }
         break;
 
-    case JSButton::button_function_t::k_custom_1:
-        // Not implemented
-        break;
-    case JSButton::button_function_t::k_custom_2:
-        // Not implemented
-        break;
+    // k_custom_1 (91) and k_custom_2 (92) are handled above as pitch lock / pitch unlock,
+    // as they are the only IDs for this feature that QGC 4.4.x exposes in its button list
     case JSButton::button_function_t::k_custom_3:
         // Not implemented
         break;
