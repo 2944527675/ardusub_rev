@@ -148,6 +148,9 @@ public:
         k_servo_6_min_toggle     = 137,
         k_servo_6_max_toggle     = 138,
 
+        k_pitch_lock_30          = 139,          ///< lock pitch angle at 30 degrees
+        k_pitch_unlock           = 140,          ///< release pitch lock
+
         k_nr_btn_functions         ///< This must be the last enum value (only add new values _before_ this one)
     } button_function_t;
 
